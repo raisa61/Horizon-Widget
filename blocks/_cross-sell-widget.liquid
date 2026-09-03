@@ -29,12 +29,13 @@
     heading: block.settings.heading,
     products_to_show: block.settings.products_to_show,
     wrapper_style: wrapper_style,
+    unique_id: block.id,
     shopify_attributes: block.shopify_attributes
   %}
 {% elsif request.design_mode %}
   <div class="cross-sell cross-sell--empty" {{ block.shopify_attributes }}>
     <p>
-      <p>{{ 'blocks.cross_sell_widget.info' | t }}</p>
+      {{ 'blocks.cross_sell_widget.info' | t }}
     </p>
   </div>
 {% endif %}
@@ -258,6 +259,11 @@
   .cross-sell__skip-link:focus-visible,
   .cross-sell__skip-target:focus-visible {
     box-shadow: inset 0 0 0 2px var(--color-foreground);
+  }
+
+  .cross-sell__error {
+    margin-top: 0.5rem;
+    font-size: var(--font-size--2xs);
   }
 
   .cross-sell__live-region {

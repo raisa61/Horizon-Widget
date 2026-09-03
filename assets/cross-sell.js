@@ -4,7 +4,6 @@ import { Component } from '@theme/component';
  * @typedef {object} VariantData
  * @property {string} [price]
  * @property {string | null} [compareAtPrice]
- * @property {boolean} [available]
  * @property {string | null} [image]
  * @property {string | null} [imageSrcset]
  * @property {string} [imageSizes]
@@ -192,7 +191,9 @@ class CrossSellComponent extends Component {
    * @param {VariantData} data
    */
   #applyImage(imageEl, data) {
-    imageEl.src = data.image ?? '';
+    if (!data.image) return;
+
+    imageEl.src = data.image;
     imageEl.alt = data.alt ?? '';
     this.#setImgAttribute(imageEl, 'srcset', data.imageSrcset);
     this.#setImgAttribute(imageEl, 'sizes', data.imageSizes);

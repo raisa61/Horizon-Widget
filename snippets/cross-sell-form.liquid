@@ -52,7 +52,6 @@
               {
                 "price": {{ variant.price | money | json }},
                 "compareAtPrice": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | json }}{% else %}null{% endif %},
-                "available": {{ variant.available | json }},
                 "image": {% if variant_media %}{{ variant_media | image_url: width: 400 | json }}{% else %}null{% endif %},
                 "imageSrcset": {% if variant_media %}{{ variant_image_srcset | strip | json }}{% else %}null{% endif %},
                 "imageSizes": "(min-width: 1400px) 15.5rem, (min-width: 750px) 12.5rem, 9.5rem",
@@ -101,6 +100,15 @@
         </button>
       </add-to-cart-component>
     </div>
+
+    <span
+      class="product-form-text__error cross-sell__error hidden"
+      ref="addToCartTextError"
+    >
+      <span class="svg-wrapper">
+        {{- 'icon-error.svg' | inline_asset_content -}}
+      </span>
+    </span>
 
     <div
       class="cross-sell__live-region"
