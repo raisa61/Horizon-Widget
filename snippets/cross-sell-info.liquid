@@ -20,12 +20,12 @@
   </a>
 
   <div class="cross-sell__price-wrapper">
-    <p class="cross-sell__price" data-cross-sell-price>
+    <span class="cross-sell__price" data-cross-sell-price>
       {{ cross_product.price | money }}
-    </p>
+    </span>
 
-    <s
-      class="cross-sell__compare-price"
+    <span
+      class="cross-sell__compare-price compare-at-price"
       data-cross-sell-compare-price
       {% unless is_on_sale %}
         hidden
@@ -34,6 +34,6 @@
       {%- if is_on_sale -%}
         {{ default_variant.compare_at_price | money }}
       {%- endif -%}
-    </s>
+    </span>
   </div>
 </div>

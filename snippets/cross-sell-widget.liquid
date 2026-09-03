@@ -17,6 +17,10 @@
 
 {%- if cross_sell_products.size > 0 -%}
   <cross-sell-component class="cross-sell" style="{{ wrapper_style | strip_newlines }}" {{ shopify_attributes }}>
+    <a class="cross-sell__skip-link" href="#cross-sell-skip" ref="skipLink">
+      {{ 'accessibility.skip_slider' | t: name: cross_sell_heading }}
+    </a>
+
     <div class="cross-sell__header">
       <h2 class="cross-sell__title">{{ cross_sell_heading }}</h2>
 
@@ -62,5 +66,14 @@
         -%}
       {%- endfor -%}
     </div>
+
+    <p
+      id="cross-sell-skip"
+      class="cross-sell__skip-target"
+      ref="skipTarget"
+      tabindex="-1"
+    >
+      {{ 'accessibility.skipped_slider' | t: name: cross_sell_heading }}
+    </p>
   </cross-sell-component>
 {%- endif -%}

@@ -33,29 +33,27 @@
   %}
 {% elsif request.design_mode %}
   <div class="cross-sell cross-sell--empty" {{ block.shopify_attributes }}>
-    <p>Add Products in the Cross Sell Metafield</p>
+    <p>
+      <p>{{ 'blocks.cross_sell_widget.info' | t }}</p>
+    </p>
   </div>
 {% endif %}
 
 {% stylesheet %}
-  /* Cross-sell widget */
-
   .cross-sell {
     container-type: inline-size;
     min-width: 0;
     max-width: 100%;
     position: relative;
-    padding-block-start: var(--padding-block-start, 0);
-    padding-block-end: var(--padding-block-end, 0);
-    padding-inline-start: var(--padding-inline-start, 0);
-    padding-inline-end: var(--padding-inline-end, 0);
+    padding-block: var(--padding-block-start, 0) var(--padding-block-end, 0);
+    padding-inline: var(--padding-inline-start, 0) var(--padding-inline-end, 0);
     background: var(--cross-sell-background-color, transparent);
 
     --cs-mono: ui-monospace, 'SF Mono', 'Roboto Mono', Consolas, monospace;
   }
 
   .cross-sell--empty {
-    border: 1px solid red;
+    border: 2px dashed red;
     padding: 1rem;
   }
 
@@ -71,8 +69,6 @@
     left: auto;
   }
 
-  /* Header */
-
   .cross-sell__header {
     display: flex;
     align-items: center;
@@ -84,7 +80,7 @@
   .cross-sell__title {
     margin: 0;
     font-family: var(--cs-mono);
-    font-size: 0.8rem;
+    font-size: 2rem;
     font-weight: 500;
     text-transform: uppercase;
     color: var(--cross-sell-heading-color, var(--color-foreground));
@@ -112,8 +108,6 @@
     cursor: not-allowed;
   }
 
-  /* Track */
-
   .cross-sell__track {
     display: flex;
     min-width: 0;
@@ -129,12 +123,6 @@
     display: none;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .cross-sell__track {
-      scroll-behavior: auto;
-    }
-  }
-
   /* Card — vertical layout below 1400px */
 
   .cross-sell__card {
@@ -145,11 +133,9 @@
     flex: 0 0 55%;
     max-width: min(10.5rem, 100%);
     padding: var(--padding-xs);
-    background: rgb(var(--color-foreground-rgb) / var(--opacity-10));
+    background: rgb(var(--color-foreground-rgb) / var(--opacity-5));
     scroll-snap-align: start;
   }
-
-  /* Image */
 
   .cross-sell__image-wrap {
     flex: 0 0 auto;
@@ -164,8 +150,6 @@
     height: 100%;
     object-fit: cover;
   }
-
-  /* Info */
 
   .cross-sell__info {
     flex: 1;
@@ -198,8 +182,6 @@
     font-size: var(--font-size--2xs);
     color: var(--color-foreground);
   }
-
-  /* Controls */
 
   .cross-sell__controls {
     display: flex;
@@ -265,11 +247,17 @@
     cursor: not-allowed;
   }
 
-  /* Focus */
+  .cross-sell__select:focus-visible,
+  .cross-sell__add:focus-visible {
+    outline: none;
+    border-width: 2px;
+  }
 
-  .cross-sell :is(button, select, a):focus-visible {
-    outline: 2px solid var(--color-foreground);
-    outline-offset: 2px;
+  .cross-sell__arrow:focus-visible,
+  .cross-sell__name:focus-visible,
+  .cross-sell__skip-link:focus-visible,
+  .cross-sell__skip-target:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--color-foreground);
   }
 
   .cross-sell__live-region {
@@ -283,11 +271,6 @@
     clip: rect(0 0 0 0);
     white-space: nowrap;
   }
-
-  /* ========================================
-   750px+
-   Larger vertical cards
-   ======================================== */
 
   @media (min-width: 750px) {
     .cross-sell__header {
@@ -335,10 +318,16 @@
     }
   }
 
-  /* ========================================
-   1400px+
-   Image and content side by side
-   ======================================== */
+  @media (min-width: 750px) and (max-width: 989px) {
+    .cross-sell__card {
+      flex-basis: 50%;
+      max-width: min(12rem, 100%);
+    }
+
+    .cross-sell__select {
+      width: 7rem;
+    }
+  }
 
   @media (min-width: 1400px) {
     body:not(:has(#cart-drawer .theme-drawer__dialog[open])) {
@@ -419,19 +408,19 @@
 
 {% schema %}
 {
-  "name": "Cross-sell",
+  "name": "t:names.cross_sell",
   "tag": null,
   "settings": [
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Pairs With"
+      "default": "t:text_defaults.cross_sell_heading"
     },
     {
       "type": "range",
       "id": "products_to_show",
-      "label": "Products to show",
+      "label": "t:settings.cross_sell_products_count",
       "min": 2,
       "max": 8,
       "step": 1,
@@ -508,7 +497,7 @@
   ],
   "presets": [
     {
-      "name": "Cross-sell"
+      "name": "t:names.cross_sell"
     }
   ]
 }

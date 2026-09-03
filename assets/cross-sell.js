@@ -30,7 +30,6 @@ class CrossSellComponent extends Component {
   connectedCallback() {
     super.connectedCallback();
 
-    this.addEventListener('change', this.#handleChange);
     this.addEventListener('scroll', this.updateArrowState, { capture: true });
     window.addEventListener('resize', this.updateArrowState);
 
@@ -40,7 +39,6 @@ class CrossSellComponent extends Component {
   disconnectedCallback() {
     super.disconnectedCallback();
 
-    this.removeEventListener('change', this.#handleChange);
     this.removeEventListener('scroll', this.updateArrowState, { capture: true });
     window.removeEventListener('resize', this.updateArrowState);
   }
@@ -99,10 +97,10 @@ class CrossSellComponent extends Component {
    * Handle variant selection changes
    * @param {Event} event
    */
-  #handleChange = (event) => {
+  handleChange = (event) => {
     const select = event.target;
 
-    if (!(select instanceof HTMLSelectElement) || !select.matches('[data-cross-sell-variant-select]')) return;
+    if (!(select instanceof HTMLSelectElement)) return;
 
     const card = select.closest('[data-cross-sell-card]');
     const variantId = select.value;

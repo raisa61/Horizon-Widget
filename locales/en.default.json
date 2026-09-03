@@ -53,6 +53,8 @@
     "search_suggestions_available": "Search suggestions available for \"{{ query }}\"",
     "skip_to_product_info": "Skip to product information",
     "skip_to_results_list": "Skip to results list",
+    "skip_slider": "Skip {{ name }} slider",
+    "skipped_slider": "You have skipped {{ name }} slider",
     "skip_to_text": "Skip to content",
     "slide_status": "Slide {{ index }} of {{ length }}",
     "slideshow": "Slideshow",
@@ -130,6 +132,9 @@
       "comment": "Comment",
       "post_success": "Thanks for contacting us. We'll get back to you as soon as possible.",
       "error_heading": "Please adjust the following:"
+    },
+    "cross_sell_widget": {
+      "info": "Add products to this product's Cross Sell Products metafield to display them as cross-sells."
     },
     "email_signup": {
       "label": "Email",

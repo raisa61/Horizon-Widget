@@ -30,7 +30,7 @@
         <div class="cross-sell__select-wrap">
           <select
             class="cross-sell__select"
-            data-cross-sell-variant-select
+            on:change="cross-sell-component/handleChange"
             name="cross_sell_variant"
             aria-label="{{ cross_product.options.first }}"
           >
@@ -69,7 +69,7 @@
                 {% endunless %}
               >
                 {{ variant.title -}}
-                {%- unless variant.available %} - Sold out{% endunless %}
+                {%- unless variant.available %} - {{ 'products.product.sold_out' | t }}{% endunless %}
               </option>
             {%- endfor -%}
           </select>
