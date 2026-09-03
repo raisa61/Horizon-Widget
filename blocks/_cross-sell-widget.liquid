@@ -7,11 +7,22 @@
   assign cross_sell_products = closest.product.metafields.custom.cross_sell_products.value
 %}
 
+{% capture wrapper_style %}
+  {% render 'spacing-padding', settings: block.settings %}
+  {% if block.settings.text_color != blank %}
+    --cross-sell-heading-color: {{ block.settings.text_color }};
+  {% endif %}
+  {% if block.settings.background %}
+    --cross-sell-background-color: {{ block.settings.background_color | default: 'rgb(0 0 0 / 0.15)' }};
+  {% endif %}
+{% endcapture %}
+
 {% if cross_sell_products.size > 0 %}
   {% render 'cross-sell-widget',
     cross_sell_products: cross_sell_products,
     heading: block.settings.heading,
     products_to_show: block.settings.products_to_show,
+    wrapper_style: wrapper_style,
     shopify_attributes: block.shopify_attributes
   %}
 {% elsif request.design_mode %}
@@ -19,6 +30,382 @@
     <p>Add Products in the Cross Sell Metafield</p>
   </div>
 {% endif %}
+
+{% stylesheet %}
+  /* Cross-sell widget */
+
+  .cross-sell {
+    container-type: inline-size;
+    min-width: 0;
+    max-width: 100%;
+    position: relative;
+    padding-block-start: var(--padding-block-start, 0);
+    padding-block-end: var(--padding-block-end, 0);
+    padding-inline-start: var(--padding-inline-start, 0);
+    padding-inline-end: var(--padding-inline-end, 0);
+    background: var(--cross-sell-background-color, transparent);
+
+    --cs-mono: ui-monospace, 'SF Mono', 'Roboto Mono', Consolas, monospace;
+  }
+
+  .cross-sell--empty {
+    border: 1px solid red;
+    padding: 1rem;
+  }
+
+  .cross-sell__skip-link,
+  .cross-sell__skip-target {
+    position: absolute;
+    left: -99999px;
+  }
+
+  .cross-sell__skip-link:focus,
+  .cross-sell__skip-target:focus {
+    position: static;
+    left: auto;
+  }
+
+  /* Header */
+
+  .cross-sell__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-lg);
+    margin-bottom: 0.75rem;
+  }
+
+  .cross-sell__title {
+    margin: 0;
+    font-family: var(--cs-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: var(--cross-sell-heading-color, var(--color-foreground));
+  }
+
+  .cross-sell__nav {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .cross-sell__arrow {
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: var(--font-size--md);
+    line-height: 1;
+    color: var(--color-foreground);
+    cursor: pointer;
+  }
+
+  .cross-sell__arrow:disabled {
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-40));
+    cursor: not-allowed;
+  }
+
+  /* Track */
+
+  .cross-sell__track {
+    display: flex;
+    min-width: 0;
+    gap: var(--gap-xs);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .cross-sell__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cross-sell__track {
+      scroll-behavior: auto;
+    }
+  }
+
+  /* Card — vertical layout below 1400px */
+
+  .cross-sell__card {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xs);
+    flex: 0 0 55%;
+    max-width: min(10.5rem, 100%);
+    padding: var(--padding-xs);
+    background: rgb(var(--color-foreground-rgb) / var(--opacity-10));
+    scroll-snap-align: start;
+  }
+
+  /* Image */
+
+  .cross-sell__image-wrap {
+    flex: 0 0 auto;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+  }
+
+  .cross-sell__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Info */
+
+  .cross-sell__info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .cross-sell__name {
+    max-width: 26ch;
+    font-size: var(--font-size--2xs);
+    line-height: 1.3;
+    color: var(--color-foreground);
+    text-decoration: none;
+  }
+
+  .cross-sell__name:hover {
+    text-decoration: underline;
+  }
+
+  .cross-sell__price-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+  }
+
+  .cross-sell__price {
+    margin: auto 0 0;
+    font-size: var(--font-size--2xs);
+    color: var(--color-foreground);
+  }
+
+  /* Controls */
+
+  .cross-sell__controls {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--gap-2xs);
+  }
+
+  .cross-sell__select-wrap {
+    position: relative;
+  }
+
+  .cross-sell__select-wrap::after {
+    content: '';
+    position: absolute;
+    right: 0.6rem;
+    top: 50%;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-right: 1px solid var(--color-foreground);
+    border-bottom: 1px solid var(--color-foreground);
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+  }
+
+  .cross-sell__select,
+  .cross-sell__add {
+    height: 2.25rem;
+    border: 1px solid var(--color-foreground);
+    border-radius: 0;
+    background: none;
+    font-family: var(--cs-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    cursor: pointer;
+  }
+
+  .cross-sell__select {
+    width: 6.5rem;
+    flex: 0 0 auto;
+    padding: 0 1.5rem 0 0.5rem;
+    appearance: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cross-sell__add {
+    padding: 0 0.6rem;
+  }
+
+  .cross-sell__add:hover {
+    background: var(--color-foreground);
+    color: var(--color-background);
+  }
+
+  .cross-sell__add:disabled {
+    border-color: rgb(var(--color-foreground-rgb) / var(--opacity-25));
+    background: none;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-40));
+    cursor: not-allowed;
+  }
+
+  /* Focus */
+
+  .cross-sell :is(button, select, a):focus-visible {
+    outline: 2px solid var(--color-foreground);
+    outline-offset: 2px;
+  }
+
+  .cross-sell__live-region {
+    position: fixed;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  /* ========================================
+   750px+
+   Larger vertical cards
+   ======================================== */
+
+  @media (min-width: 750px) {
+    .cross-sell__header {
+      margin-bottom: 1rem;
+    }
+
+    .cross-sell__title {
+      font-size: var(--font-size--md);
+    }
+
+    .cross-sell__track {
+      gap: 0.75rem;
+    }
+
+    .cross-sell__card {
+      flex-basis: 58%;
+      max-width: min(14rem, 100%);
+      gap: 0.75rem;
+      padding: 0.75rem;
+    }
+
+    .cross-sell__info {
+      gap: var(--gap-xs);
+    }
+
+    .cross-sell__name {
+      font-size: var(--font-size--sm);
+    }
+
+    .cross-sell__price {
+      font-size: 0.8rem;
+    }
+
+    .cross-sell__controls {
+      gap: 0.45rem;
+    }
+
+    .cross-sell__select,
+    .cross-sell__add {
+      height: 2.6rem;
+    }
+
+    .cross-sell__select {
+      width: 8.5rem;
+    }
+  }
+
+  /* ========================================
+   1400px+
+   Image and content side by side
+   ======================================== */
+
+  @media (min-width: 1400px) {
+    body:not(:has(#cart-drawer .theme-drawer__dialog[open])) {
+      .cross-sell__header {
+        margin-bottom: 1.25rem;
+      }
+
+      .cross-sell__title {
+        font-size: 1.2rem;
+      }
+
+      .cross-sell__card {
+        flex-direction: row;
+        flex-basis: 90%;
+        max-width: min(48rem, 100%);
+        min-height: 10rem;
+        gap: var(--gap-xl);
+        padding: var(--padding-md);
+      }
+
+      .cross-sell__image-wrap {
+        flex: 0 0 34%;
+        width: auto;
+        min-width: 0;
+      }
+
+      .cross-sell__info {
+        justify-content: flex-start;
+        gap: 0.75rem;
+      }
+
+      .cross-sell__info .cross-sell__info {
+        flex: 1;
+      }
+
+      .cross-sell__price-wrapper {
+        margin-top: auto;
+      }
+
+      .cross-sell__name {
+        font-size: 1.1rem;
+        line-height: 1.25;
+      }
+
+      .cross-sell__price {
+        margin: 0;
+        font-size: var(--font-size--sm);
+      }
+
+      .cross-sell__select-wrap {
+        flex: 0 1 11rem;
+        min-width: 0;
+      }
+
+      .cross-sell__select,
+      .cross-sell__add {
+        height: 2.9rem;
+        font-size: 0.7rem;
+      }
+
+      .cross-sell__select {
+        width: 100%;
+        padding: 0 1.6rem 0 0.75rem;
+      }
+
+      .cross-sell__add {
+        flex: 0 0 auto;
+        padding: 0 0.9rem;
+        min-width: 3rem;
+      }
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {

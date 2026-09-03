@@ -4,6 +4,7 @@
   @param {object} cross_sell_products - Products to render
   @param {string} [heading] - Widget heading
   @param {number} [products_to_show] - Max products to render
+  @param {string} [wrapper_style] - Inline style for the widget root element
   @param {string} [shopify_attributes] - Theme editor attributes from the parent block
 {%- enddoc -%}
 
@@ -13,7 +14,7 @@
 -%}
 
 {%- if cross_sell_products.size > 0 -%}
-  <div class="cross-sell" {{ shopify_attributes }}>
+  <div class="cross-sell" style="{{ wrapper_style | strip_newlines }}" {{ shopify_attributes }}>
     <div class="cross-sell__header">
       <h2 class="cross-sell__title">{{ cross_sell_heading }}</h2>
 
