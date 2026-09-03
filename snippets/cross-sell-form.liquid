@@ -1,0 +1,85 @@
+{%- liquid
+  assign form_id = 'cross-sell-' | append: cross_product.id
+  assign fly_image = cross_product.featured_image | image_url: width: 100
+-%}
+
+<product-form-component
+  id="{{ form_id }}-component"
+  class="cross-sell__form"
+  data-product-id="{{ cross_product.id }}"
+  data-quantity-default="1"
+  on:submit="/handleSubmit"
+>
+  {%- form 'product', cross_product, id: form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+    <input
+      type="hidden"
+      name="id"
+      ref="variantId"
+      value="{% if has_single_variant %}{{ cross_product.variants.first.id }}{% else %}{{ default_variant.id }}{% endif %}"
+    >
+
+    <input
+      type="hidden"
+      name="quantity"
+      value="1"
+    >
+
+    <div class="cross-sell__controls">
+      {%- unless has_single_variant -%}
+        <div class="cross-sell__select-wrap">
+          <select
+            class="cross-sell__select"
+            name="cross_sell_variant"
+            aria-label="{{ cross_product.options.first }}"
+          >
+            <option value="" disabled selected>
+              {{ cross_product.options.first | upcase }}
+            </option>
+
+            {%- for variant in cross_product.variants -%}
+              <option
+                value="{{ variant.id }}"
+                {% unless variant.available %}
+                  disabled
+                {% endunless %}
+              >
+                {{ variant.title -}}
+                {%- unless variant.available %} - Sold out{% endunless %}
+              </option>
+            {%- endfor -%}
+          </select>
+        </div>
+      {%- endunless -%}
+
+      <add-to-cart-component
+        ref="addToCartButtonContainer"
+        class="cross-sell__add-wrap"
+        data-add-to-cart-animation="true"
+        data-product-variant-media="{{ fly_image }}"
+        on:click="/handleClick"
+      >
+        <button
+          ref="addToCartButton"
+          type="submit"
+          name="add"
+          class="button cross-sell__add"
+          {% if has_single_variant %}
+            {% unless cross_product.variants.first.available %}disabled{% endunless %}
+          {% else %}
+            disabled
+          {% endif %}
+        >
+          <span>
+            {{ 'actions.add' | t }}
+          </span>
+        </button>
+      </add-to-cart-component>
+    </div>
+
+    <div
+      class="cross-sell__live-region"
+      role="status"
+      ref="liveRegion"
+    ></div>
+  {%- endform -%}
+</product-form-component>

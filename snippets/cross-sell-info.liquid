@@ -1,0 +1,32 @@
+{%- doc -%}
+  Renders product information for a cross-sell card.
+
+  @param {product} cross_product - Product to render
+  @param {object} default_variant - Default product variant
+{%- enddoc -%}
+
+<div class="cross-sell__info">
+  <a
+    href="{{ cross_product.url }}?variant={{ default_variant.id }}"
+    class="cross-sell__name"
+  >
+    {{ cross_product.title }}
+  </a>
+
+  <div class="cross-sell__price-wrapper">
+    <p class="cross-sell__price">
+      {{ cross_product.price | money }}
+    </p>
+
+    <s
+      class="cross-sell__compare-price"
+      {% unless default_variant.compare_at_price > default_variant.price %}
+        hidden
+      {% endunless %}
+    >
+      {%- if default_variant.compare_at_price > default_variant.price -%}
+        {{ default_variant.compare_at_price | money }}
+      {%- endif -%}
+    </s>
+  </div>
+</div>

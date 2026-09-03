@@ -1,0 +1,63 @@
+{%- doc -%}
+  Renders the cross-sell carousel.
+
+  @param {object} cross_sell_products - Products to render
+  @param {string} [heading] - Widget heading
+  @param {number} [products_to_show] - Max products to render
+  @param {string} [shopify_attributes] - Theme editor attributes from the parent block
+{%- enddoc -%}
+
+{%- liquid
+  assign cross_sell_heading = heading | default: 'Pairs With'
+  assign cross_sell_limit = products_to_show | default: 8
+-%}
+
+{%- if cross_sell_products.size > 0 -%}
+  <div class="cross-sell" {{ shopify_attributes }}>
+    <div class="cross-sell__header">
+      <h2 class="cross-sell__title">{{ cross_sell_heading }}</h2>
+
+      <div class="cross-sell__nav">
+        <button
+          type="button"
+          class="cross-sell__arrow"
+          ref="prevButton"
+          on:click="/scrollPrev"
+          aria-label="{{ 'accessibility.slideshow_previous' | t }}"
+        >
+          &larr;
+        </button>
+
+        <button
+          type="button"
+          class="cross-sell__arrow"
+          ref="nextButton"
+          on:click="/scrollNext"
+          aria-label="{{ 'accessibility.slideshow_pause' | t }}"
+        >
+          &rarr;
+        </button>
+      </div>
+    </div>
+
+    <div class="cross-sell__track" ref="track">
+      {%- for cross_product in cross_sell_products limit: cross_sell_limit -%}
+        {%- liquid
+          assign has_single_variant = false
+
+          if cross_product.variants.size == 1
+            assign has_single_variant = true
+          endif
+
+          assign default_variant = cross_product.selected_or_first_available_variant
+        -%}
+
+        {%- render 'cross-sell-card',
+          cross_product: cross_product,
+          has_single_variant: has_single_variant,
+          default_variant: default_variant
+        -%}
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
