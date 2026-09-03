@@ -38,7 +38,7 @@
               {{ cross_product.options.first | upcase }}
             </option>
 
-            {%- for variant in cross_product.variants limit: 250 -%}
+            {%- for variant in cross_product.variants -%}
               {%- assign variant_media = variant.image | default: cross_product.featured_image -%}
               {%- capture variant_image_srcset -%}
               {%- if variant_media -%}

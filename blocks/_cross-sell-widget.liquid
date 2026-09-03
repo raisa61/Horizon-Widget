@@ -9,8 +9,8 @@
 
 {% capture wrapper_style %}
   {% render 'spacing-padding', settings: block.settings %}
-  {% if block.settings.text_color != blank %}
-    --cross-sell-heading-color: {{ block.settings.text_color }};
+  {% if block.settings.heading_color != blank %}
+    --cross-sell-heading-color: {{ block.settings.heading_color }};
   {% endif %}
   {% if block.settings.background %}
     --cross-sell-background-color: {{ block.settings.background_color | default: 'rgb(0 0 0 / 0.15)' }};
@@ -100,7 +100,7 @@
     background: none;
     font-size: var(--font-size--md);
     line-height: 1;
-    color: var(--color-foreground);
+    color: var(--cross-sell-heading-color, var(--color-foreground));
     cursor: pointer;
   }
 
@@ -438,8 +438,8 @@
     },
     {
       "type": "color",
-      "id": "text_color",
-      "label": "t:settings.text_color",
+      "id": "heading_color",
+      "label": "t:settings.heading_color",
       "placeholder": "t:settings.default"
     },
     {
@@ -503,7 +503,8 @@
   ],
   "presets": [
     {
-      "name": "t:names.cross_sell"
+      "name": "t:names.cross_sell",
+      "category": "t:categories.product"
     }
   ]
 }
