@@ -15,6 +15,7 @@
       type="hidden"
       name="id"
       ref="variantId"
+      data-cross-sell-variant-id
       value="{% if has_single_variant %}{{ cross_product.variants.first.id }}{% else %}{{ default_variant.id }}{% endif %}"
     >
 
@@ -29,6 +30,7 @@
         <div class="cross-sell__select-wrap">
           <select
             class="cross-sell__select"
+            data-cross-sell-variant-select
             name="cross_sell_variant"
             aria-label="{{ cross_product.options.first }}"
           >
@@ -36,9 +38,32 @@
               {{ cross_product.options.first | upcase }}
             </option>
 
-            {%- for variant in cross_product.variants -%}
+            {%- for variant in cross_product.variants limit: 250 -%}
+              {%- assign variant_media = variant.image | default: cross_product.featured_image -%}
+              {%- capture variant_image_srcset -%}
+              {%- if variant_media -%}
+                  {{ variant_media | image_url: width: 300 }} 300w,
+                  {{ variant_media | image_url: width: 400 }} 400w,
+                  {{ variant_media | image_url: width: 600 }} 600w
+              {%- endif -%}
+            {%- endcapture -%}
+              {%- assign variant_alt = variant_media.alt | default: variant.title -%}
+              {%- capture variant_json -%}
+              {
+                "price": {{ variant.price | money | json }},
+                "compareAtPrice": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | json }}{% else %}null{% endif %},
+                "available": {{ variant.available | json }},
+                "image": {% if variant_media %}{{ variant_media | image_url: width: 400 | json }}{% else %}null{% endif %},
+                "imageSrcset": {% if variant_media %}{{ variant_image_srcset | strip | json }}{% else %}null{% endif %},
+                "imageSizes": "(min-width: 1400px) 15.5rem, (min-width: 750px) 12.5rem, 9.5rem",
+                "flyImage": {% if variant_media %}{{ variant_media | image_url: width: 100 | json }}{% else %}null{% endif %},
+                "alt": {{ variant_alt | json }}
+              }
+            {%- endcapture -%}
+
               <option
                 value="{{ variant.id }}"
+                data-variant="{{ variant_json | escape }}"
                 {% unless variant.available %}
                   disabled
                 {% endunless %}
@@ -63,6 +88,7 @@
           type="submit"
           name="add"
           class="button cross-sell__add"
+          data-cross-sell-add
           {% if has_single_variant %}
             {% unless cross_product.variants.first.available %}disabled{% endunless %}
           {% else %}

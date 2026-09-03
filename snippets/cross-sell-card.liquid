@@ -6,7 +6,7 @@
   @param {object} default_variant - Default product variant
 {%- enddoc -%}
 
-<div class="cross-sell__card">
+<div class="cross-sell__card" data-cross-sell-card>
   <div class="cross-sell__image-wrap">
     {%- if cross_product.featured_image -%}
       {%- liquid
@@ -27,6 +27,7 @@
         width="300"
         height="300"
         class="cross-sell__image"
+        data-cross-sell-image
       >
     {%- else -%}
       {{ 'product-1' | placeholder_svg_tag: 'cross-sell__image' }}

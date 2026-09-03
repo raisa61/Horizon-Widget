@@ -18,6 +18,12 @@
 {% endcapture %}
 
 {% if cross_sell_products.size > 0 %}
+  <script
+    type="module"
+    src="{{ 'cross-sell.js' | asset_url }}"
+    fetchpriority="low"
+  ></script>
+
   {% render 'cross-sell-widget',
     cross_sell_products: cross_sell_products,
     heading: block.settings.heading,
@@ -402,6 +408,10 @@
         flex: 0 0 auto;
         padding: 0 0.9rem;
         min-width: 3rem;
+      }
+
+      [data-cross-sell-variant-id] + .cross-sell__add {
+        min-width: 6rem;
       }
     }
   }

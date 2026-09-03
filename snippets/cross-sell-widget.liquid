@@ -8,13 +8,15 @@
   @param {string} [shopify_attributes] - Theme editor attributes from the parent block
 {%- enddoc -%}
 
+{% render 'fly-to-cart-styles' %}
+
 {%- liquid
   assign cross_sell_heading = heading | default: 'Pairs With'
   assign cross_sell_limit = products_to_show | default: 8
 -%}
 
 {%- if cross_sell_products.size > 0 -%}
-  <div class="cross-sell" style="{{ wrapper_style | strip_newlines }}" {{ shopify_attributes }}>
+  <cross-sell-component class="cross-sell" style="{{ wrapper_style | strip_newlines }}" {{ shopify_attributes }}>
     <div class="cross-sell__header">
       <h2 class="cross-sell__title">{{ cross_sell_heading }}</h2>
 
@@ -60,5 +62,5 @@
         -%}
       {%- endfor -%}
     </div>
-  </div>
+  </cross-sell-component>
 {%- endif -%}

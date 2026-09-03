@@ -5,26 +5,33 @@
   @param {object} default_variant - Default product variant
 {%- enddoc -%}
 
+{%- assign is_on_sale = false -%}
+{%- if default_variant.compare_at_price > default_variant.price -%}
+  {%- assign is_on_sale = true -%}
+{%- endif -%}
+
 <div class="cross-sell__info">
   <a
     href="{{ cross_product.url }}?variant={{ default_variant.id }}"
     class="cross-sell__name"
+    data-cross-sell-product-link
   >
     {{ cross_product.title }}
   </a>
 
   <div class="cross-sell__price-wrapper">
-    <p class="cross-sell__price">
+    <p class="cross-sell__price" data-cross-sell-price>
       {{ cross_product.price | money }}
     </p>
 
     <s
       class="cross-sell__compare-price"
-      {% unless default_variant.compare_at_price > default_variant.price %}
+      data-cross-sell-compare-price
+      {% unless is_on_sale %}
         hidden
       {% endunless %}
     >
-      {%- if default_variant.compare_at_price > default_variant.price -%}
+      {%- if is_on_sale -%}
         {{ default_variant.compare_at_price | money }}
       {%- endif -%}
     </s>
