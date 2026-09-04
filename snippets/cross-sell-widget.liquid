@@ -1,0 +1,91 @@
+{%- doc -%}
+  Renders the Cross sell carousel.
+
+  @param {object} cross_sell_products - Products to render
+  @param {string} [heading] - Widget heading
+  @param {number} [products_to_show] - Max products to render
+  @param {string} [wrapper_style] - Inline style for the widget root element
+  @param {string} [unique_id] - Unique identifier used to scope element IDs
+  @param {string} [shopify_attributes] - Theme editor attributes from the parent block
+
+  @example
+  {% render 'cross-sell-widget',
+    cross_sell_products: product.metafields.custom.cross_sell_products.value,
+    heading: 'Pairs With',
+    products_to_show: 8,
+    unique_id: block.id,
+    shopify_attributes: block.shopify_attributes
+  %}
+{%- enddoc -%}
+
+{% render 'fly-to-cart-styles' %}
+
+{%- liquid
+  assign cross_sell_heading = heading | default: 'Pairs With'
+  assign cross_sell_limit = products_to_show | default: 8
+  assign skip_scope = unique_id | default: 'default'
+  assign skip_target_id = 'cross-sell-skip-' | append: skip_scope
+-%}
+
+{%- if cross_sell_products.size > 0 -%}
+  <cross-sell-component class="cross-sell" style="{{ wrapper_style | strip_newlines }}" {{ shopify_attributes }}>
+    <a class="cross-sell__skip-link" href="#{{ skip_target_id }}" ref="skipLink">
+      {{ 'accessibility.skip_slider' | t: name: cross_sell_heading }}
+    </a>
+
+    <div class="cross-sell__header">
+      <h2 class="cross-sell__title">{{ cross_sell_heading }}</h2>
+
+      <div class="cross-sell__nav">
+        <button
+          type="button"
+          class="cross-sell__arrow"
+          ref="prevButton"
+          on:click="/scrollPrev"
+          aria-label="{{ 'accessibility.slideshow_previous' | t }}"
+        >
+          &larr;
+        </button>
+
+        <button
+          type="button"
+          class="cross-sell__arrow"
+          ref="nextButton"
+          on:click="/scrollNext"
+          aria-label="{{ 'accessibility.slideshow_next' | t }}"
+        >
+          &rarr;
+        </button>
+      </div>
+    </div>
+
+    <div class="cross-sell__track" ref="track">
+      {%- for cross_product in cross_sell_products limit: cross_sell_limit -%}
+        {%- liquid
+          assign has_single_variant = false
+
+          if cross_product.variants.size == 1
+            assign has_single_variant = true
+          endif
+
+          assign default_variant = cross_product.selected_or_first_available_variant
+        -%}
+
+        {%- render 'cross-sell-card',
+          cross_product: cross_product,
+          has_single_variant: has_single_variant,
+          default_variant: default_variant
+        -%}
+      {%- endfor -%}
+    </div>
+
+    <p
+      id="{{ skip_target_id }}"
+      class="cross-sell__skip-target"
+      ref="skipTarget"
+      tabindex="-1"
+    >
+      {{ 'accessibility.skipped_slider' | t: name: cross_sell_heading }}
+    </p>
+  </cross-sell-component>
+{%- endif -%}

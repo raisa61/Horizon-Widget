@@ -16,6 +16,9 @@
       "placeholder": "Adresse e-mail",
       "success": "Merci de vous être abonné(e) !"
     },
+    "cross_sell_widget": {
+      "info": "Ajoutez des produits au champ métadonnées Produits croisés de ce produit pour les afficher en tant que ventes croisées."
+    },
     "filter": "Filtrer",
     "payment_methods": "Moyens de paiement",
     "contact_form": {
@@ -39,6 +42,8 @@
     "skip_to_text": "Ignorer et passer au contenu",
     "skip_to_product_info": "Passer aux informations sur le produit",
     "skip_to_results_list": "Passer à la liste des résultats",
+    "skip_slider": "Passer le carrousel {{ name }}",
+    "skipped_slider": "Vous avez passé le carrousel {{ name }}",
     "new_window": "S’ouvre dans une nouvelle fenêtre.",
     "slideshow_next": "Diapositive suivante",
     "slideshow_previous": "Diapositive précédente",

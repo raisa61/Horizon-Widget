@@ -253,6 +253,7 @@
   },
   "names": {
     "column": "Column",
+    "cross_sell": "Cross sell",
     "product_title": "Product title",
     "custom_liquid": "Custom Liquid",
     "404": "404",
@@ -818,6 +819,8 @@
     "country_region": "Country/Region",
     "cover_image": "Cover image",
     "cover_image_size": "Cover image size",
+    "cross_sell_heading": "Heading",
+    "cross_sell_products_count": "Products to show",
     "currency_code": "Currency code",
     "custom_height": "Custom height",
     "custom_minimum_height": "Custom minimum height",
@@ -880,6 +883,7 @@
     "heading": "Heading",
     "heading_preset": "Heading preset",
     "headings": "Headings",
+    "heading_color": "Heading color",
     "height": "Height",
     "hide_logo_on_home_page": "Hide logo on home page",
     // Checkbox to hide padding control settings
@@ -1196,6 +1200,7 @@
     "cart": "Cart",
     "collapsible_row": "Collapsible row",
     "contact_form_button_label": "Submit",
+    "cross_sell_heading": "Pairs With",
     "discover_collection": "Discover the collection",
     "email_signup_button_label": "Subscribe",
     "featured_collection": "Featured collection",
