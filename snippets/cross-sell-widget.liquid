@@ -1,5 +1,5 @@
 {%- doc -%}
-  Renders the cross-sell carousel.
+  Renders the Cross sell carousel.
 
   @param {object} cross_sell_products - Products to render
   @param {string} [heading] - Widget heading
@@ -7,6 +7,15 @@
   @param {string} [wrapper_style] - Inline style for the widget root element
   @param {string} [unique_id] - Unique identifier used to scope element IDs
   @param {string} [shopify_attributes] - Theme editor attributes from the parent block
+
+  @example
+  {% render 'cross-sell-widget',
+    cross_sell_products: product.metafields.custom.cross_sell_products.value,
+    heading: 'Pairs With',
+    products_to_show: 8,
+    unique_id: block.id,
+    shopify_attributes: block.shopify_attributes
+  %}
 {%- enddoc -%}
 
 {% render 'fly-to-cart-styles' %}

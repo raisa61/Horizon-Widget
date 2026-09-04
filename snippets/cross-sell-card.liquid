@@ -1,31 +1,32 @@
 {%- doc -%}
-  Renders a single cross-sell product card.
+  Renders a single Cross sell product card.
 
   @param {product} cross_product - Product to render
   @param {boolean} has_single_variant - Whether the product has only one variant
-  @param {object} default_variant - Default product variant
+  @param {object} default_variant - Pre-selected variant
 {%- enddoc -%}
 
 <div class="cross-sell__card" data-cross-sell-card>
   <div class="cross-sell__image-wrap">
     {%- if cross_product.featured_image -%}
       {%- liquid
-        assign image_height = 300
+        assign image = cross_product.featured_image
+        assign image_height = 200
         assign image_height_2x = image_height | times: 2
         assign image_height_3x = image_height | times: 3
-        assign image_alt_text = cross_product.featured_image.alt | default: default_variant.title | escape
+        assign image_width = image_height | times: image.aspect_ratio | round
+        assign image_alt_text = image.alt | default: cross_product.title | escape
       -%}
       {%- capture image_srcset -%}
-        {{ cross_product.featured_image | image_url: height: image_height }} 1x, {{ cross_product.featured_image | image_url: height: image_height_2x }} 2x, {{ cross_product.featured_image | image_url: height: image_height_3x }} 3x
+        {{ image | image_url: height: image_height }} 1x, {{ image | image_url: height: image_height_2x }} 2x, {{ image | image_url: height: image_height_3x }} 3x
       {%- endcapture -%}
       <img
-        src="{{ cross_product.featured_image | image_url: height: image_height }}"
+        src="{{ image | image_url: height: image_height }}"
         srcset="{{ image_srcset | strip }}"
-        sizes="(min-width: 1400px) 15.5rem, (min-width: 750px) 12.5rem, 9.5rem"
         alt="{{ image_alt_text }}"
         loading="lazy"
-        width="300"
-        height="300"
+        width="{{ image_width }}"
+        height="{{ image_height }}"
         class="cross-sell__image"
         data-cross-sell-image
       >

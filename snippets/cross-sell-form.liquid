@@ -1,3 +1,11 @@
+{%- doc -%}
+  Renders an add-to-cart form for a Cross sell product, including a variant selector.
+
+  @param {product} cross_product - The product to render the cross-sell form for.
+  @param {boolean} has_single_variant - Whether the product has only one variant
+  @param {variant} [default_variant] - Pre-selected variant
+{%- enddoc -%}
+
 {%- liquid
   assign form_id = 'cross-sell-' | append: cross_product.id
   assign fly_image = cross_product.featured_image | image_url: width: 100
@@ -42,9 +50,7 @@
               {%- assign variant_media = variant.image | default: cross_product.featured_image -%}
               {%- capture variant_image_srcset -%}
               {%- if variant_media -%}
-                  {{ variant_media | image_url: width: 300 }} 300w,
-                  {{ variant_media | image_url: width: 400 }} 400w,
-                  {{ variant_media | image_url: width: 600 }} 600w
+                  {{ variant_media | image_url: height: 200 }} 1x, {{ variant_media | image_url: height: 400 }} 2x, {{ variant_media | image_url: height: 600 }} 3x
               {%- endif -%}
             {%- endcapture -%}
               {%- assign variant_alt = variant_media.alt | default: variant.title -%}
@@ -52,9 +58,8 @@
               {
                 "price": {{ variant.price | money | json }},
                 "compareAtPrice": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | json }}{% else %}null{% endif %},
-                "image": {% if variant_media %}{{ variant_media | image_url: width: 400 | json }}{% else %}null{% endif %},
+                "image": {% if variant_media %}{{ variant_media | image_url: height: 200 | json }}{% else %}null{% endif %},
                 "imageSrcset": {% if variant_media %}{{ variant_image_srcset | strip | json }}{% else %}null{% endif %},
-                "imageSizes": "(min-width: 1400px) 15.5rem, (min-width: 750px) 12.5rem, 9.5rem",
                 "flyImage": {% if variant_media %}{{ variant_media | image_url: width: 100 | json }}{% else %}null{% endif %},
                 "alt": {{ variant_alt | json }}
               }
@@ -77,7 +82,6 @@
 
       <add-to-cart-component
         ref="addToCartButtonContainer"
-        class="cross-sell__add-wrap"
         data-add-to-cart-animation="true"
         data-product-variant-media="{{ fly_image }}"
         on:click="/handleClick"
@@ -95,7 +99,7 @@
           {% endif %}
         >
           <span>
-            {{ 'actions.add' | t }}
+            {{- 'actions.add' | t -}}
           </span>
         </button>
       </add-to-cart-component>
@@ -112,7 +116,9 @@
 
     <div
       class="cross-sell__live-region"
+      aria-live="assertive"
       role="status"
+      aria-atomic="true"
       ref="liveRegion"
     ></div>
   {%- endform -%}

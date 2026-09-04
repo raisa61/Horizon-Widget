@@ -6,7 +6,6 @@ import { Component } from '@theme/component';
  * @property {string | null} [compareAtPrice]
  * @property {string | null} [image]
  * @property {string | null} [imageSrcset]
- * @property {string} [imageSizes]
  * @property {string | null} [flyImage]
  * @property {string} [alt]
  */
@@ -21,8 +20,7 @@ import { Component } from '@theme/component';
  */
 
 /**
- * A custom element that renders a cross-sell carousel.
- * Handles: Carousel navigation and Variant selection
+ * A custom element that renders a Cross sell block (carousel navigation, variant selection)
  * @extends {Component<Refs>}
  */
 class CrossSellComponent extends Component {
@@ -172,20 +170,6 @@ class CrossSellComponent extends Component {
   }
 
   /**
-   * Set an img attribute when a value is present, otherwise remove it
-   * @param {Element} img
-   * @param {string} name
-   * @param {string | null | undefined} value
-   */
-  #setImgAttribute(img, name, value) {
-    if (value) {
-      img.setAttribute(name, value);
-    } else {
-      img.removeAttribute(name);
-    }
-  }
-
-  /**
    * Update the card image
    * @param {HTMLImageElement} imageEl
    * @param {VariantData} data
@@ -195,8 +179,12 @@ class CrossSellComponent extends Component {
 
     imageEl.src = data.image;
     imageEl.alt = data.alt ?? '';
-    this.#setImgAttribute(imageEl, 'srcset', data.imageSrcset);
-    this.#setImgAttribute(imageEl, 'sizes', data.imageSizes);
+
+    if (data.imageSrcset) {
+      imageEl.setAttribute('srcset', data.imageSrcset);
+    } else {
+      imageEl.removeAttribute('srcset');
+    }
   }
 
   /**
